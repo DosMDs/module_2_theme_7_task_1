@@ -62,19 +62,22 @@ export const TodoProvider = ({ children }) => {
 		}
 	};
 
+	const clearError = () => setError(null);
+
 	return (
-		<TodoContext.Provider
+		<TodoContext
 			value={{
 				todos,
 				loading,
 				error,
+				clearError,
 				handleAdd,
 				handleUpdate,
 				handleDelete,
 			}}
 		>
 			{children}
-		</TodoContext.Provider>
+		</TodoContext>
 	);
 };
 
