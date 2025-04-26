@@ -1,0 +1,19 @@
+.todoItem {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 1rem;
+	margin-bottom: 0.5rem;
+	background-color: #f9f9f9;
+	border-radius: 12px;
+	transition: background-color 0.3s ease;
+}
+
+.todoItem:hover {
+	background-color: #f1f1f1;
+}
+
+.todoItem.completed .title {
+	text-decoration: line-through;
+	color: #999;
+}
