@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { readTodos, createTodo, updateTodo, deleteTodo } from "../utils/";
+import { readTodos, createTodo, updateTodo, deleteTodo } from "../utils";
 
 const TodoContext = createContext();
 
