@@ -1,18 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import approveIcon from "../../assets/approve.svg";
 import cancelIcon from "../../assets/cancel.svg";
-import { useUpdateTodo } from "../../hooks";
+import { useTodos } from "../../hooks";
 import { IconButton } from "../IconButton/IconButton";
 import styles from "./TodoItemEdit.module.css";
 
-export const TodoItemEdit = ({
-	id,
-	title,
-	completed,
-	refreshTodosList,
-	isEdit,
-	setIsEdit,
-}) => {
+export const TodoItemEdit = ({ id, title, completed, isEdit, setIsEdit }) => {
 	const [newTitle, setNewTitle] = useState(title);
 	const inputRef = useRef(null);
 
@@ -22,11 +15,11 @@ export const TodoItemEdit = ({
 		}
 	}, [isEdit]);
 
-	const { isUpdating, updateTodo } = useUpdateTodo(refreshTodosList);
+	const { loading, handleUpdate } = useTodos();
 
-	const handleUpdate = (id) => {
+	const updateTodo = (id) => {
 		const body = { title: newTitle, completed };
-		updateTodo(id, body);
+		handleUpdate(id, body);
 	};
 
 	return (
@@ -34,7 +27,7 @@ export const TodoItemEdit = ({
 			<form
 				onSubmit={(event) => {
 					event.preventDefault();
-					handleUpdate(id);
+					updateTodo(id);
 					setIsEdit(false);
 				}}
 				className={styles.formEdit}
@@ -52,7 +45,7 @@ export const TodoItemEdit = ({
 					type="submit"
 					src={approveIcon}
 					alt="Принять"
-					disabled={isUpdating}
+					disabled={loading}
 				/>
 				<IconButton
 					src={cancelIcon}

@@ -1,33 +1,34 @@
 import { useState, useEffect } from "react";
 import clearIcon from "../../assets/clear.svg";
 import styles from "./TodoForm.module.css";
-import { useAddTodo } from "../../hooks";
+import { useTodos } from "../../hooks";
 import { IconButton } from "../IconButton/IconButton";
 import sortAscIcon from "../../assets/sort-asc.svg";
 import sortDescIcon from "../../assets/sort-desc.svg";
 
-export const TodoForm = ({
-	setTitleToSearch,
-	refreshTodosList,
-	sortOrder,
-	changeSortOrder,
-}) => {
+export const TodoForm = () => {
 	const [newTodo, setNewTodo] = useState("");
-	const [searchValue, setSearchValue] = useState("");
+	const [order, setOrder] = useState("asc");
+	const [searchText, setSearchText] = useState("");
 
-	const { isCreating, addTodo } = useAddTodo(refreshTodosList);
+	const { loading, loadTodos, handleAdd } = useTodos();
 
 	useEffect(() => {
 		const timeout = setTimeout(() => {
-			setTitleToSearch(searchValue);
+			setSearchText(searchText);
+			loadTodos(order, searchText);
 		}, 300);
 		return () => clearTimeout(timeout);
-	}, [searchValue, setTitleToSearch]);
+	}, [searchText, order]);
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
 
-		addTodo(newTodo);
+		handleAdd({ title: newTodo, completed: false });
+	};
+
+	const handleChangeSortOrder = () => {
+		setOrder(order === "asc" ? "desc" : "asc");
 	};
 
 	return (
@@ -44,7 +45,7 @@ export const TodoForm = ({
 				<button
 					type="submit"
 					className={styles.addBtn}
-					disabled={isCreating}
+					disabled={loading}
 				>
 					Добавить новую задачу
 				</button>
@@ -53,22 +54,22 @@ export const TodoForm = ({
 			<div className={styles.searchWrapper}>
 				<input
 					type="text"
-					value={searchValue}
-					onChange={(e) => setSearchValue(e.target.value)}
+					value={searchText}
+					onChange={(e) => setSearchText(e.target.value)}
 					placeholder="Поиск задач"
 					className={styles.searchInput}
 				/>
 				<button
 					type="button"
 					className={styles.clearBtn}
-					onClick={() => setSearchValue("")}
+					onClick={() => setSearchText("")}
 					aria-label="Очистить поиск"
 				>
 					<img src={clearIcon} alt="X" className={styles.clearIcon} />
 				</button>
 				<IconButton
-					handleOnClick={changeSortOrder}
-					src={sortOrder === "asc" ? sortAscIcon : sortDescIcon}
+					handleOnClick={handleChangeSortOrder}
+					src={order === "asc" ? sortAscIcon : sortDescIcon}
 					alt="Сортировать"
 				/>
 			</div>

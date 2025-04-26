@@ -1,4 +1,4 @@
-import { useTodos } from "../../context";
+import { useTodos } from "../../hooks";
 import { TodoItem } from "../TodoItem/TodoItem";
 import styles from "./TodoList.module.css";
 

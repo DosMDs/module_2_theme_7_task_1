@@ -1,22 +1,15 @@
-import { useDeleteTodo, useUpdateTodo } from "../../hooks";
+import { useTodos } from "../../hooks";
 import { IconButton } from "../IconButton/IconButton";
 import editIcon from "../../assets/edit.svg";
 import deleteIcon from "../../assets/delete.svg";
 import styles from "./TodoItemDisplay.module.css";
 
-export const TodoItemDisplay = ({
-	id,
-	title,
-	completed,
-	refreshTodosList,
-	setIsEdit,
-}) => {
-	const { isUpdating, updateTodo } = useUpdateTodo(refreshTodosList);
-	const { isDeleting, deleteTodo } = useDeleteTodo(refreshTodosList);
+export const TodoItemDisplay = ({ id, title, completed, setIsEdit }) => {
+	const { loading, handleDelete, handleUpdate } = useTodos();
 
 	const handleCheckboxUpdate = (id) => {
 		const body = { completed: !completed, title };
-		updateTodo(id, body);
+		handleUpdate(id, body);
 	};
 
 	return (
@@ -25,7 +18,7 @@ export const TodoItemDisplay = ({
 				type="checkbox"
 				checked={completed}
 				className={styles.checkbox}
-				disabled={isUpdating}
+				disabled={loading}
 				onChange={() => handleCheckboxUpdate(id)}
 			/>
 			<span className={styles.title}>{title}</span>
@@ -37,8 +30,8 @@ export const TodoItemDisplay = ({
 			<IconButton
 				src={deleteIcon}
 				alt="Удалить"
-				disabled={isDeleting}
-				handleOnClick={() => deleteTodo(id)}
+				disabled={loading}
+				handleOnClick={() => handleDelete(id)}
 			/>
 		</>
 	);
