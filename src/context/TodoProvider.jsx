@@ -6,8 +6,10 @@ export const TodoProvider = ({ children }) => {
 	const [todos, setTodos] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
+	const [searchText, setSearchText] = useState("");
+	const [order, setOrder] = useState("asc");
 
-	const loadTodos = async (order = "asc", searchText = "") => {
+	const loadTodos = async () => {
 		setLoading(true);
 		setError(null);
 		try {
@@ -19,6 +21,14 @@ export const TodoProvider = ({ children }) => {
 			setLoading(false);
 		}
 	};
+
+	useEffect(() => {
+		const timeoutId = setTimeout(() => {
+			loadTodos();
+		}, 300);
+
+		return () => clearTimeout(timeoutId);
+	}, [searchText, order]);
 
 	const handleAdd = async (newTodo) => {
 		setLoading(true);
@@ -63,13 +73,24 @@ export const TodoProvider = ({ children }) => {
 		loadTodos();
 	}, []);
 
+	const changeOrder = () => {
+		setOrder(order === "asc" ? "desc" : "asc");
+	};
+
+	const changeSearchText = (text) => {
+		setSearchText(text);
+	};
+
 	return (
 		<TodoContext
 			value={{
 				todos,
 				loading,
 				error,
-				loadTodos,
+				order,
+				searchText,
+				changeOrder,
+				changeSearchText,
 				handleAdd,
 				handleUpdate,
 				handleDelete,

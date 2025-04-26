@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import clearIcon from "../../assets/clear.svg";
 import styles from "./TodoForm.module.css";
 import { useTodos } from "../../hooks";
@@ -8,27 +8,20 @@ import sortDescIcon from "../../assets/sort-desc.svg";
 
 export const TodoForm = () => {
 	const [newTodo, setNewTodo] = useState("");
-	const [order, setOrder] = useState("asc");
-	const [searchText, setSearchText] = useState("");
 
-	const { loading, loadTodos, handleAdd } = useTodos();
-
-	useEffect(() => {
-		const timeout = setTimeout(() => {
-			setSearchText(searchText);
-			loadTodos(order, searchText);
-		}, 300);
-		return () => clearTimeout(timeout);
-	}, [searchText, order]);
+	const {
+		loading,
+		order,
+		searchText,
+		changeOrder,
+		changeSearchText,
+		handleAdd,
+	} = useTodos();
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
 
 		handleAdd({ title: newTodo, completed: false });
-	};
-
-	const handleChangeSortOrder = () => {
-		setOrder(order === "asc" ? "desc" : "asc");
 	};
 
 	return (
@@ -55,20 +48,20 @@ export const TodoForm = () => {
 				<input
 					type="text"
 					value={searchText}
-					onChange={(e) => setSearchText(e.target.value)}
+					onChange={(e) => changeSearchText(e.target.value)}
 					placeholder="Поиск задач"
 					className={styles.searchInput}
 				/>
 				<button
 					type="button"
 					className={styles.clearBtn}
-					onClick={() => setSearchText("")}
+					onClick={() => changeSearchText("")}
 					aria-label="Очистить поиск"
 				>
 					<img src={clearIcon} alt="X" className={styles.clearIcon} />
 				</button>
 				<IconButton
-					handleOnClick={handleChangeSortOrder}
+					handleOnClick={changeOrder}
 					src={order === "asc" ? sortAscIcon : sortDescIcon}
 					alt="Сортировать"
 				/>
