@@ -5,7 +5,7 @@ export const readTodos = async (order = "asc", searchText = "") => {
 	let url = `${TODOS_URL}?_sort=title&_order=${order}`;
 
 	if (searchText) {
-		url += `&title=${searchText}`;
+		url += `&title_like=${searchText}`;
 	}
 
 	return await request(url);
