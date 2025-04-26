@@ -6,6 +6,7 @@ const TodoContext = createContext();
 export const TodoProvider = ({ children }) => {
 	const [todos, setTodos] = useState([]);
 	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(null);
 
 	useEffect(() => {
 		const loadTodos = async () => {
@@ -14,7 +15,7 @@ export const TodoProvider = ({ children }) => {
 				const data = await readTodos();
 				setTodos(data);
 			} catch (error) {
-				console.error("Ошибка при загрузке задач:", error);
+				setError(error.message);
 			} finally {
 				setLoading(false);
 			}
@@ -29,7 +30,7 @@ export const TodoProvider = ({ children }) => {
 			const createdTodo = await createTodo(newTodo);
 			setTodos([...todos, createdTodo]);
 		} catch (error) {
-			console.error("Ошибка при добавлении задачи:", error);
+			setError(error.message);
 		} finally {
 			setLoading(false);
 		}
@@ -43,7 +44,7 @@ export const TodoProvider = ({ children }) => {
 				todos.map((todo) => (todo.id === id ? updatedTodo : todo))
 			);
 		} catch (error) {
-			console.error("Ошибка при обновлении задачи:", error);
+			setError(error.message);
 		} finally {
 			setLoading(false);
 		}
@@ -55,7 +56,7 @@ export const TodoProvider = ({ children }) => {
 			await deleteTodo(id);
 			setTodos(todos.filter((todo) => todo.id !== id));
 		} catch (error) {
-			console.error("Ошибка при удалении задачи:", error);
+			setError(error.message);
 		} finally {
 			setLoading(false);
 		}
@@ -63,7 +64,14 @@ export const TodoProvider = ({ children }) => {
 
 	return (
 		<TodoContext.Provider
-			value={{ todos, loading, handleAdd, handleUpdate, handleDelete }}
+			value={{
+				todos,
+				loading,
+				error,
+				handleAdd,
+				handleUpdate,
+				handleDelete,
+			}}
 		>
 			{children}
 		</TodoContext.Provider>
