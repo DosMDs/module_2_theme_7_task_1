@@ -24,8 +24,8 @@ export const TodoProvider = ({ children }) => {
 		setLoading(true);
 		setError(null);
 		try {
-			const createdTodo = await createTodo(newTodo);
-			setTodos([...todos, createdTodo]);
+			await createTodo(newTodo);
+			await loadTodos();
 		} catch (error) {
 			setError(error.message);
 		} finally {
@@ -37,10 +37,8 @@ export const TodoProvider = ({ children }) => {
 		setLoading(true);
 		setError(null);
 		try {
-			const updatedTodo = await updateTodo(id, updatedFields);
-			setTodos(
-				todos.map((todo) => (todo.id === id ? updatedTodo : todo))
-			);
+			await updateTodo(id, updatedFields);
+			await loadTodos();
 		} catch (error) {
 			setError(error.message);
 		} finally {
@@ -53,7 +51,7 @@ export const TodoProvider = ({ children }) => {
 		setError(null);
 		try {
 			await deleteTodo(id);
-			setTodos(todos.filter((todo) => todo.id !== id));
+			await loadTodos();
 		} catch (error) {
 			setError(error.message);
 		} finally {
